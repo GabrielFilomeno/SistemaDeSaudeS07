@@ -1,34 +1,15 @@
-package com.example.semana7.entities;
-
-import jakarta.persistence.*;
+package com.example.semana7.DTOs;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Entity
-@Table(name = "Paciente")
-public class PacienteEntity {
+public class PacienteResponseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pacienteId;
     private String nome;
     private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String email;
-
-    @ManyToOne
-    @JoinColumn(name = "id_endereco")
-    private EnderecoEntity endereco;
-
-    public Long getPacienteId() {
-        return pacienteId;
-    }
-
-    public void setPacienteId(Long pacienteId) {
-        this.pacienteId = pacienteId;
-    }
+    private String enderecoId;
 
     public String getNome() {
         return nome;
@@ -70,11 +51,11 @@ public class PacienteEntity {
         this.email = email;
     }
 
-    public EnderecoEntity getEndereco() {
-        return endereco;
+    public String getEnderecoId() {
+        return enderecoId;
     }
 
-    public void setEndereco(EnderecoEntity endereco) {
-        this.endereco = endereco;
+    public void setEnderecoId(String enderecoId) {
+        this.enderecoId = enderecoId;
     }
 }

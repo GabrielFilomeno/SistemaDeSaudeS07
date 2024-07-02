@@ -1,27 +1,12 @@
-package com.example.semana7.entities;
+package com.example.semana7.DTOs;
 
-import jakarta.persistence.*;
+public class EnderecoResponseDTO {
 
-@Entity
-@Table(name = "Endereco")
-public class EnderecoEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long enderecoId;
     private String logradouro;
     private String estado;
     private String cidade;
     private String numero;
     private String cep;
-
-    public Long getEnderecoId() {
-        return enderecoId;
-    }
-
-    public void setEnderecoId(Long enderecoId) {
-        this.enderecoId = enderecoId;
-    }
 
     public String getLogradouro() {
         return logradouro;
