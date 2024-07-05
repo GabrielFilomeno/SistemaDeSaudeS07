@@ -2,6 +2,8 @@ package com.example.semana7.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Nutricionista")
 public class NutricionistaEntity {
@@ -13,6 +15,7 @@ public class NutricionistaEntity {
     private String crn;
     private Integer tempoExperiencia;
     private String especialidade;
+    private List<String> certificacoes;
 
     public Long getNutricionistaId() {
         return nutricionistaId;
@@ -53,5 +56,13 @@ public class NutricionistaEntity {
 
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
+    }
+
+    public List<String> getCertificacoes() {
+        return certificacoes;
+    }
+
+    public void setCertificacoes(List<String> certificacoes) {
+        this.certificacoes = certificacoes;
     }
 }

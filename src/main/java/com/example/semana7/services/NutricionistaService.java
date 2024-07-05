@@ -7,6 +7,7 @@ import com.example.semana7.repositories.NutricionistaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,19 +24,28 @@ public class NutricionistaService {
     public NutricionistaResponseDTO cadastrarNutricionista(NutricionistaRequestDTO nutricionistaRequestDTO) {
 
         NutricionistaEntity nutricionistaEntity = new NutricionistaEntity();
-        nutricionistaEntity.setNome(nutricionistaRequestDTO.getNome());
-        nutricionistaEntity.setCrn(nutricionistaRequestDTO.getCrn());
-        nutricionistaEntity.setTempoExperiencia(nutricionistaRequestDTO.getTempoExperiencia());
-        nutricionistaEntity.setEspecialidade(nutricionistaRequestDTO.getEspecialidade());
 
-        NutricionistaEntity cadastrarNutricionista = nutricionistaRepository.save(nutricionistaEntity);
+        var validaNome = nutricionistaRepository.findByNome(nutricionistaRequestDTO.getNome());
+        var nome = nutricionistaRequestDTO.getNome();
+        if (Objects.equals(validaNome.getNome(), nome)) {
+            return null;
+        } else {
+            nutricionistaEntity.setNome(nutricionistaRequestDTO.getNome());
+            nutricionistaEntity.setCrn(nutricionistaRequestDTO.getCrn());
+            nutricionistaEntity.setTempoExperiencia(nutricionistaRequestDTO.getTempoExperiencia());
+            nutricionistaEntity.setEspecialidade(nutricionistaRequestDTO.getEspecialidade());
+            nutricionistaEntity.setCertificacoes(nutricionistaRequestDTO.getCertificacoes());
 
-        return new NutricionistaResponseDTO(
-                cadastrarNutricionista.getNutricionistaId(),
-                cadastrarNutricionista.getNome(),
-                cadastrarNutricionista.getCrn(),
-                cadastrarNutricionista.getTempoExperiencia(),
-                cadastrarNutricionista.getEspecialidade());
+            NutricionistaEntity cadastrarNutricionista = nutricionistaRepository.save(nutricionistaEntity);
+
+            return new NutricionistaResponseDTO(
+                    cadastrarNutricionista.getNutricionistaId(),
+                    cadastrarNutricionista.getNome(),
+                    cadastrarNutricionista.getCrn(),
+                    cadastrarNutricionista.getTempoExperiencia(),
+                    cadastrarNutricionista.getEspecialidade(),
+                    cadastrarNutricionista.getCertificacoes());
+        }
     };
 
     public List<NutricionistaResponseDTO> listarNutricionistas() {
@@ -45,7 +55,8 @@ public class NutricionistaService {
                         nutricionistaEntity.getNome(),
                         nutricionistaEntity.getCrn(),
                         nutricionistaEntity.getTempoExperiencia(),
-                        nutricionistaEntity.getEspecialidade())
+                        nutricionistaEntity.getEspecialidade(),
+                        nutricionistaEntity.getCertificacoes())
         ).collect(Collectors.toList());
     };
 
@@ -56,7 +67,8 @@ public class NutricionistaService {
                         nutricionistaEntity.getNome(),
                         nutricionistaEntity.getCrn(),
                         nutricionistaEntity.getTempoExperiencia(),
-                        nutricionistaEntity.getEspecialidade())
+                        nutricionistaEntity.getEspecialidade(),
+                        nutricionistaEntity.getCertificacoes())
         ).findAny();
     };
 
@@ -64,10 +76,17 @@ public class NutricionistaService {
         Optional<NutricionistaEntity> nutricionistaOptional = nutricionistaRepository.findById(nutricionistaId);
 
             NutricionistaEntity nutricionistaEntity = nutricionistaOptional.get();
+
+            var validaNome = nutricionistaRepository.findByNome(nutricionistaRequestDTO.getNome());
+            var nome = nutricionistaRequestDTO.getNome();
+            if (Objects.equals(validaNome.getNome(), nome)) {
+                return null;
+            } else {
             nutricionistaEntity.setNome(nutricionistaRequestDTO.getNome());
             nutricionistaEntity.setCrn(nutricionistaRequestDTO.getCrn());
             nutricionistaEntity.setTempoExperiencia(nutricionistaRequestDTO.getTempoExperiencia());
             nutricionistaEntity.setEspecialidade(nutricionistaRequestDTO.getEspecialidade());
+            nutricionistaEntity.setCertificacoes(nutricionistaRequestDTO.getCertificacoes());
 
             NutricionistaEntity nutricionistaAtualizado = nutricionistaRepository.save(nutricionistaEntity);
 
@@ -76,7 +95,9 @@ public class NutricionistaService {
                     nutricionistaAtualizado.getNome(),
                     nutricionistaAtualizado.getCrn(),
                     nutricionistaAtualizado.getTempoExperiencia(),
-                    nutricionistaAtualizado.getEspecialidade());
+                    nutricionistaAtualizado.getEspecialidade(),
+                    nutricionistaAtualizado.getCertificacoes());
+            }
     }
 
     public boolean deletarNutricionista(Long nutricionistaId) {
@@ -87,6 +108,33 @@ public class NutricionistaService {
             nutricionistaRepository.deleteById(nutricionistaId);
             return true;
 
+        } else {
+            return false;
+        }
+    }
+
+    public boolean adicionarTempoExperiencia (Long nutricionistaId) {
+        var nutricionista = nutricionistaRepository.findById(nutricionistaId);
+
+        if (nutricionista.isPresent()) {
+            var adicionarTempoExperiencia = nutricionista.get().getTempoExperiencia() + 1;
+            nutricionista.get().setTempoExperiencia(adicionarTempoExperiencia);
+            nutricionistaRepository.save(nutricionista.get());
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean adicionarCertificacao(Long nutricionistaId, String certificacao) {
+        var nutricionista = nutricionistaRepository.findById(nutricionistaId);
+
+        if (nutricionista.isPresent()) {
+            nutricionista.get().getCertificacoes().add(certificacao);
+            nutricionistaRepository.save(nutricionista.get());
+
+            return true;
         } else {
             return false;
         }

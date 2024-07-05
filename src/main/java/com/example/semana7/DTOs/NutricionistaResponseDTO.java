@@ -1,5 +1,7 @@
 package com.example.semana7.DTOs;
 
+import java.util.List;
+
 public class NutricionistaResponseDTO {
 
     private Long nutricionistaId;
@@ -7,8 +9,9 @@ public class NutricionistaResponseDTO {
     private String crn;
     private Integer tempoExperiencia;
     private String especialidade;
+    private List<String> certificacoes;
 
-    public NutricionistaResponseDTO(Long nutricionistaId, String nome, String crn, Integer tempoExperiencia, String especialidade) {
+    public NutricionistaResponseDTO(Long nutricionistaId, String nome, String crn, Integer tempoExperiencia, String especialidade, List<String> certificacoes) {
     }
 
     public Long getNutricionistaId() {
@@ -49,5 +52,13 @@ public class NutricionistaResponseDTO {
 
     public void setEspecialidade(String especialidade) {
         this.especialidade = especialidade;
+    }
+
+    public List<String> getCertificacoes() {
+        return certificacoes;
+    }
+
+    public void setCertificacoes(List<String> certificacoes) {
+        this.certificacoes = certificacoes;
     }
 }
