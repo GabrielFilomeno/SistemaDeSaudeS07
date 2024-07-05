@@ -1,13 +1,30 @@
 package com.example.semana7.DTOs;
 
+import com.example.semana7.entities.NutricionistaEntity;
+import com.example.semana7.entities.PacienteEntity;
+
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class ConsultaResponseDTO {
 
+    private Long consultaId;
     private LocalDate dataConsulta;
     private String observacoes;
-    private Long nutricionistaId;
-    private Long pacienteId;
+    private NutricionistaEntity nutricionistaEntity;
+    private PacienteEntity pacienteEntity;
+
+    public ConsultaResponseDTO(Long consultaId, LocalDate dataConsulta, String observacoes, NutricionistaEntity nutricionista, PacienteEntity paciente) {
+    }
+
+
+    public Long getConsultaId() {
+        return consultaId;
+    }
+
+    public void setConsultaId(Long consultaId) {
+        this.consultaId = consultaId;
+    }
 
     public LocalDate getDataConsulta() {
         return dataConsulta;
@@ -25,19 +42,19 @@ public class ConsultaResponseDTO {
         this.observacoes = observacoes;
     }
 
-    public Long getNutricionistaId() {
-        return nutricionistaId;
+    public NutricionistaEntity getNutricionistaEntity() {
+        return nutricionistaEntity;
     }
 
-    public void setNutricionistaId(Long nutricionistaId) {
-        this.nutricionistaId = nutricionistaId;
+    public void setNutricionistaEntity(NutricionistaEntity nutricionistaEntity) {
+        this.nutricionistaEntity = nutricionistaEntity;
     }
 
-    public Long getPacienteId() {
-        return pacienteId;
+    public PacienteEntity getPacienteEntity() {
+        return pacienteEntity;
     }
 
-    public void setPacienteId(Long pacienteId) {
-        this.pacienteId = pacienteId;
+    public void setPacienteEntity(PacienteEntity pacienteEntity) {
+        this.pacienteEntity = pacienteEntity;
     }
 }

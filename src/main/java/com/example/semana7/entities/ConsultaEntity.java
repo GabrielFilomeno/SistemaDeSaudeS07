@@ -3,6 +3,7 @@ package com.example.semana7.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Entity
 @Table(name = "Consulta")

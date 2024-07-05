@@ -1,5 +1,7 @@
 package com.example.semana7.DTOs;
 
+import com.example.semana7.entities.EnderecoEntity;
+
 import java.time.LocalDate;
 
 public class PacienteRequestDTO {
@@ -9,7 +11,7 @@ public class PacienteRequestDTO {
     private String cpf;
     private String telefone;
     private String email;
-    private Long enderecoId;
+    private EnderecoEntity enderecoEntity;
 
     public String getNome() {
         return nome;
@@ -51,11 +53,11 @@ public class PacienteRequestDTO {
         this.email = email;
     }
 
-    public Long getEnderecoId() {
-        return enderecoId;
+    public EnderecoEntity getEnderecoEntity() {
+        return enderecoEntity;
     }
 
-    public void setEnderecoId(Long enderecoId) {
-        this.enderecoId = enderecoId;
+    public void setEnderecoEntity(EnderecoEntity enderecoEntity) {
+        this.enderecoEntity = enderecoEntity;
     }
 }

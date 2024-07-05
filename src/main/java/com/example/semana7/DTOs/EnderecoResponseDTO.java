@@ -2,11 +2,23 @@ package com.example.semana7.DTOs;
 
 public class EnderecoResponseDTO {
 
+    private Long enderecoId;
     private String logradouro;
     private String estado;
     private String cidade;
     private String numero;
     private String cep;
+
+    public EnderecoResponseDTO(Long enderecoId, String logradouro, String estado, String cidade, String numero, String cep) {
+    }
+
+    public Long getEnderecoId() {
+        return enderecoId;
+    }
+
+    public void setEnderecoId(Long enderecoId) {
+        this.enderecoId = enderecoId;
+    }
 
     public String getLogradouro() {
         return logradouro;

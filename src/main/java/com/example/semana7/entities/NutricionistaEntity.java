@@ -9,7 +9,9 @@ public class NutricionistaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nutricionistaId;
+    private String nome;
     private String crn;
+    private Integer tempoExperiencia;
     private String especialidade;
 
     public Long getNutricionistaId() {
@@ -20,12 +22,29 @@ public class NutricionistaEntity {
         this.nutricionistaId = nutricionistaId;
     }
 
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getCrn() {
         return crn;
     }
 
     public void setCrn(String crn) {
         this.crn = crn;
+    }
+
+    public Integer getTempoExperiencia() {
+        return tempoExperiencia;
+    }
+
+    public void setTempoExperiencia(Integer tempoExperiencia) {
+        this.tempoExperiencia = tempoExperiencia;
     }
 
     public String getEspecialidade() {
