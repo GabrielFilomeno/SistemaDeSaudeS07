@@ -2,15 +2,14 @@ package com.example.semana7.services;
 
 import com.example.semana7.DTOs.PacienteRequestDTO;
 import com.example.semana7.DTOs.PacienteResponseDTO;
-import com.example.semana7.entities.EnderecoEntity;
 import com.example.semana7.entities.PacienteEntity;
 import com.example.semana7.repositories.EnderecoRepository;
 import com.example.semana7.repositories.PacienteRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PacienteService {
@@ -31,16 +30,8 @@ public class PacienteService {
         pacienteEntity.setCpf(pacienteRequestDTO.getCpf());
         pacienteEntity.setTelefone(pacienteRequestDTO.getTelefone());
         pacienteEntity.setEmail(pacienteRequestDTO.getEmail());
-
-        var endereco = new EnderecoEntity();
-        endereco.setLogradouro(pacienteRequestDTO.getEnderecoEntity().getLogradouro());
-        endereco.setEstado(pacienteRequestDTO.getEnderecoEntity().getEstado());
-        endereco.setCidade(pacienteRequestDTO.getEnderecoEntity().getCidade());
-        endereco.setNumero(pacienteRequestDTO.getEnderecoEntity().getNumero());
-        endereco.setCep(pacienteRequestDTO.getEnderecoEntity().getCep());
-        enderecoRepository.save(endereco);
-
-        pacienteEntity.setEndereco(endereco);
+        var endereco = enderecoRepository.findById(pacienteRequestDTO.getEnderecoId());
+        endereco.ifPresent(pacienteEntity::setEndereco);
 
         PacienteEntity cadastrarPaciente = pacienteRepository.save(pacienteEntity);
 
@@ -55,29 +46,41 @@ public class PacienteService {
     }
 
     public List<PacienteResponseDTO> listarPacientes() {
-        return pacienteRepository.findAll().stream().map(
-                pacienteEntity -> new PacienteResponseDTO(
-                        pacienteEntity.getPacienteId(),
-                        pacienteEntity.getNome(),
-                        pacienteEntity.getDataNascimento(),
-                        pacienteEntity.getCpf(),
-                        pacienteEntity.getTelefone(),
-                        pacienteEntity.getEmail(),
-                        pacienteEntity.getEndereco())
-        ).collect(Collectors.toList());
+        List<PacienteEntity> pacientes = pacienteRepository.findAll();
+
+        List<PacienteResponseDTO> pacienteResponseDTO = new ArrayList<>();
+
+        for (PacienteEntity entity : pacientes) {
+            PacienteResponseDTO response = new PacienteResponseDTO();
+
+            response.setPacienteId(entity.getPacienteId());
+            response.setNome(entity.getNome());
+            response.setDataNascimento(entity.getDataNascimento());
+            response.setCpf(entity.getCpf());
+            response.setTelefone(entity.getTelefone());
+            response.setEmail(entity.getEmail());
+            response.setEnderecoEntity(entity.getEndereco());
+            pacienteResponseDTO.add(response);
+        }
+
+        return pacienteResponseDTO;
     }
 
     public Optional<PacienteResponseDTO> buscarPacientes(Long pacienteId) {
-        return pacienteRepository.findById(pacienteId).stream().map(
-                pacienteEntity -> new PacienteResponseDTO(
-                        pacienteEntity.getPacienteId(),
-                        pacienteEntity.getNome(),
-                        pacienteEntity.getDataNascimento(),
-                        pacienteEntity.getCpf(),
-                        pacienteEntity.getTelefone(),
-                        pacienteEntity.getEmail(),
-                        pacienteEntity.getEndereco())
-        ).findFirst();
+        Optional<PacienteEntity> entity = pacienteRepository.findById(pacienteId);
+
+        PacienteResponseDTO response = new PacienteResponseDTO();
+
+        if (entity.isPresent()) {
+            response.setPacienteId(entity.get().getPacienteId());
+            response.setNome(entity.get().getNome());
+            response.setDataNascimento(entity.get().getDataNascimento());
+            response.setCpf(entity.get().getCpf());
+            response.setTelefone(entity.get().getTelefone());
+            response.setEmail(entity.get().getEmail());
+            response.setEnderecoEntity(entity.get().getEndereco());
+        }
+        return Optional.of(response);
     }
 
     public PacienteResponseDTO atualizarPaciente(Long pacienteId, PacienteRequestDTO pacienteRequestDTO) {
@@ -89,17 +92,8 @@ public class PacienteService {
         pacienteEntity.setCpf(pacienteRequestDTO.getCpf());
         pacienteEntity.setTelefone(pacienteRequestDTO.getTelefone());
         pacienteEntity.setEmail(pacienteRequestDTO.getEmail());
-
-        var enderecoOptional = enderecoRepository.findById(pacienteRequestDTO.getEnderecoEntity().getEnderecoId()).get();
-
-        enderecoOptional.setLogradouro(pacienteRequestDTO.getEnderecoEntity().getLogradouro());
-        enderecoOptional.setEstado(pacienteRequestDTO.getEnderecoEntity().getEstado());
-        enderecoOptional.setCidade(pacienteRequestDTO.getEnderecoEntity().getCidade());
-        enderecoOptional.setNumero(pacienteRequestDTO.getEnderecoEntity().getNumero());
-        enderecoOptional.setCep(pacienteRequestDTO.getEnderecoEntity().getCep());
-        enderecoRepository.save(enderecoOptional);
-
-        pacienteEntity.setEndereco(enderecoOptional);
+        var endereco = enderecoRepository.findById(pacienteRequestDTO.getEnderecoId());
+        endereco.ifPresent(pacienteEntity::setEndereco);
 
         PacienteEntity pacienteAtualizado = pacienteRepository.save(pacienteEntity);
 

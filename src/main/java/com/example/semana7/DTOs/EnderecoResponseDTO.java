@@ -9,6 +9,9 @@ public class EnderecoResponseDTO {
     private String numero;
     private String cep;
 
+    public EnderecoResponseDTO() {
+    }
+
     public EnderecoResponseDTO(Long enderecoId, String logradouro, String estado, String cidade, String numero, String cep) {
     }
 

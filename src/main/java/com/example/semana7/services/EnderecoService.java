@@ -1,15 +1,14 @@
 package com.example.semana7.services;
 
-
 import com.example.semana7.DTOs.EnderecoRequestDTO;
 import com.example.semana7.DTOs.EnderecoResponseDTO;
 import com.example.semana7.entities.EnderecoEntity;
 import com.example.semana7.repositories.EnderecoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class EnderecoService {
@@ -42,27 +41,39 @@ public class EnderecoService {
     }
 
     public List<EnderecoResponseDTO> listarEndereco() {
-        return enderecoRepository.findAll().stream().map(
-                enderecoEntity -> new EnderecoResponseDTO(
-                        enderecoEntity.getEnderecoId(),
-                        enderecoEntity.getLogradouro(),
-                        enderecoEntity.getEstado(),
-                        enderecoEntity.getCidade(),
-                        enderecoEntity.getNumero(),
-                        enderecoEntity.getCep())
-        ).collect(Collectors.toList());
+        List<EnderecoEntity> enderecos = enderecoRepository.findAll();
+
+        List<EnderecoResponseDTO> enderecoResponseDTOS = new ArrayList<>();
+
+        for (EnderecoEntity entity : enderecos) {
+            EnderecoResponseDTO response = new EnderecoResponseDTO();
+
+            response.setEnderecoId(entity.getEnderecoId());
+            response.setLogradouro(entity.getLogradouro());
+            response.setEstado(entity.getEstado());
+            response.setCidade(entity.getCidade());
+            response.setNumero(entity.getNumero());
+            response.setCep(entity.getCep());
+            enderecoResponseDTOS.add(response);
+        }
+
+        return enderecoResponseDTOS;
     }
 
     public Optional<EnderecoResponseDTO> buscarEndereco(Long enderecoId) {
-        return enderecoRepository.findById(enderecoId).stream().map(
-                enderecoEntity -> new EnderecoResponseDTO(
-                        enderecoEntity.getEnderecoId(),
-                        enderecoEntity.getLogradouro(),
-                        enderecoEntity.getEstado(),
-                        enderecoEntity.getCidade(),
-                        enderecoEntity.getNumero(),
-                        enderecoEntity.getCep())
-        ).findFirst();
+        Optional<EnderecoEntity> entity = enderecoRepository.findById(enderecoId);
+
+        EnderecoResponseDTO response = new EnderecoResponseDTO();
+
+        if (entity.isPresent()) {
+            response.setEnderecoId(entity.get().getEnderecoId());
+            response.setLogradouro(entity.get().getLogradouro());
+            response.setEstado(entity.get().getEstado());
+            response.setCidade(entity.get().getCidade());
+            response.setNumero(entity.get().getNumero());
+            response.setCep(entity.get().getCep());
+        }
+        return Optional.of(response);
     }
 
     public EnderecoResponseDTO atualizarEndereco(Long enderecoId, EnderecoRequestDTO enderecoRequestDTO) {

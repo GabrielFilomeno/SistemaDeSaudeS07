@@ -6,10 +6,10 @@ import com.example.semana7.entities.NutricionistaEntity;
 import com.example.semana7.repositories.NutricionistaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -27,9 +27,11 @@ public class NutricionistaService {
 
         var validaNome = nutricionistaRepository.findByNome(nutricionistaRequestDTO.getNome());
         var nome = nutricionistaRequestDTO.getNome();
-        if (Objects.equals(validaNome.getNome(), nome)) {
-            return null;
-        } else {
+        if (validaNome != null) {
+            if (Objects.equals(validaNome.getNome(), nome)) {
+                return null;
+            }
+        }
             nutricionistaEntity.setNome(nutricionistaRequestDTO.getNome());
             nutricionistaEntity.setCrn(nutricionistaRequestDTO.getCrn());
             nutricionistaEntity.setTempoExperiencia(nutricionistaRequestDTO.getTempoExperiencia());
@@ -45,32 +47,43 @@ public class NutricionistaService {
                     cadastrarNutricionista.getTempoExperiencia(),
                     cadastrarNutricionista.getEspecialidade(),
                     cadastrarNutricionista.getCertificacoes());
-        }
     };
 
     public List<NutricionistaResponseDTO> listarNutricionistas() {
-        return  nutricionistaRepository.findAll().stream().map(
-                nutricionistaEntity -> new NutricionistaResponseDTO(
-                        nutricionistaEntity.getNutricionistaId(),
-                        nutricionistaEntity.getNome(),
-                        nutricionistaEntity.getCrn(),
-                        nutricionistaEntity.getTempoExperiencia(),
-                        nutricionistaEntity.getEspecialidade(),
-                        nutricionistaEntity.getCertificacoes())
-        ).collect(Collectors.toList());
-    };
+        List<NutricionistaEntity> nutricionistas = nutricionistaRepository.findAll();
+
+        List<NutricionistaResponseDTO> nutricionistaResponseDTO = new ArrayList<>();
+
+        for (NutricionistaEntity entity : nutricionistas) {
+            NutricionistaResponseDTO response = new NutricionistaResponseDTO();
+
+            response.setNutricionistaId(entity.getNutricionistaId());
+            response.setNome(entity.getNome());
+            response.setCrn(entity.getCrn());
+            response.setTempoExperiencia(entity.getTempoExperiencia());
+            response.setEspecialidade(entity.getEspecialidade());
+            response.setCertificacoes(entity.getCertificacoes());
+            nutricionistaResponseDTO.add(response);
+        }
+
+        return nutricionistaResponseDTO;
+    }
 
     public Optional<NutricionistaResponseDTO> buscarNutricionistas(Long nutricionistaId) {
-        return  nutricionistaRepository.findById(nutricionistaId).stream().map(
-                nutricionistaEntity -> new NutricionistaResponseDTO(
-                        nutricionistaEntity.getNutricionistaId(),
-                        nutricionistaEntity.getNome(),
-                        nutricionistaEntity.getCrn(),
-                        nutricionistaEntity.getTempoExperiencia(),
-                        nutricionistaEntity.getEspecialidade(),
-                        nutricionistaEntity.getCertificacoes())
-        ).findAny();
-    };
+        Optional<NutricionistaEntity> entity = nutricionistaRepository.findById(nutricionistaId);
+
+        NutricionistaResponseDTO response = new NutricionistaResponseDTO();
+
+        if (entity.isPresent()) {
+            response.setNutricionistaId(entity.get().getNutricionistaId());
+            response.setNome(entity.get().getNome());
+            response.setCrn(entity.get().getCrn());
+            response.setTempoExperiencia(entity.get().getTempoExperiencia());
+            response.setEspecialidade(entity.get().getEspecialidade());
+            response.setCertificacoes(entity.get().getCertificacoes());
+        }
+        return Optional.of(response);
+    }
 
     public NutricionistaResponseDTO atualizarNutricionista(Long nutricionistaId, NutricionistaRequestDTO nutricionistaRequestDTO) {
         Optional<NutricionistaEntity> nutricionistaOptional = nutricionistaRepository.findById(nutricionistaId);
@@ -79,9 +92,12 @@ public class NutricionistaService {
 
             var validaNome = nutricionistaRepository.findByNome(nutricionistaRequestDTO.getNome());
             var nome = nutricionistaRequestDTO.getNome();
+
+            if(validaNome != null) {
             if (Objects.equals(validaNome.getNome(), nome)) {
                 return null;
-            } else {
+            }
+            }
             nutricionistaEntity.setNome(nutricionistaRequestDTO.getNome());
             nutricionistaEntity.setCrn(nutricionistaRequestDTO.getCrn());
             nutricionistaEntity.setTempoExperiencia(nutricionistaRequestDTO.getTempoExperiencia());
@@ -97,7 +113,6 @@ public class NutricionistaService {
                     nutricionistaAtualizado.getTempoExperiencia(),
                     nutricionistaAtualizado.getEspecialidade(),
                     nutricionistaAtualizado.getCertificacoes());
-            }
     }
 
     public boolean deletarNutricionista(Long nutricionistaId) {

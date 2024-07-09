@@ -8,9 +8,9 @@ import com.example.semana7.repositories.NutricionistaRepository;
 import com.example.semana7.repositories.PacienteRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ConsultaService {
@@ -48,27 +48,36 @@ public class ConsultaService {
     }
 
     public List<ConsultaResponseDTO> listarConsultas() {
+        List<ConsultaEntity> consultas = consultaRepository.findAll();
 
-        return consultaRepository.findAll().stream().map(
-                consultaEntity -> new ConsultaResponseDTO(
-                        consultaEntity.getConsultaId(),
-                        consultaEntity.getDataConsulta(),
-                        consultaEntity.getObservacoes(),
-                        consultaEntity.getNutricionista(),
-                        consultaEntity.getPaciente())
-        ).collect(Collectors.toList());
+        List<ConsultaResponseDTO> consultaResponseDTO = new ArrayList<>();
+
+        for (ConsultaEntity entity : consultas) {
+            ConsultaResponseDTO response = new ConsultaResponseDTO();
+
+            response.setConsultaId(entity.getConsultaId());
+            response.setDataConsulta(entity.getDataConsulta());
+            response.setObservacoes(entity.getObservacoes());
+            response.setNutricionistaEntity(entity.getNutricionista());
+            response.setPacienteEntity(entity.getPaciente());
+            consultaResponseDTO.add(response);
+        }
+
+        return consultaResponseDTO;
     }
 
     public Optional<ConsultaResponseDTO> buscarConsultas(Long consultaId) {
+        Optional<ConsultaEntity> entity = consultaRepository.findById(consultaId);
 
-        return consultaRepository.findById(consultaId).stream().map(
-                consultaEntity -> new ConsultaResponseDTO(
-                        consultaEntity.getConsultaId(),
-                        consultaEntity.getDataConsulta(),
-                        consultaEntity.getObservacoes(),
-                        consultaEntity.getNutricionista(),
-                        consultaEntity.getPaciente())
-        ).findFirst();
+        ConsultaResponseDTO response = new ConsultaResponseDTO();
+
+        if (entity.isPresent()) {
+            response.setDataConsulta(entity.get().getDataConsulta());
+            response.setObservacoes(entity.get().getObservacoes());
+            response.setNutricionistaEntity(entity.get().getNutricionista());
+            response.setPacienteEntity(entity.get().getPaciente());
+        }
+        return Optional.of(response);
     }
 
     public ConsultaResponseDTO atualizarConsulta(Long consultaId, ConsultaRequestDTO consultaRequestDTO) {

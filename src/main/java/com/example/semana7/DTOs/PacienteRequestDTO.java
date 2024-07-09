@@ -1,17 +1,20 @@
 package com.example.semana7.DTOs;
 
-import com.example.semana7.entities.EnderecoEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.LocalDate;
 
 public class PacienteRequestDTO {
 
     private String nome;
+    @JsonDeserialize
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String email;
-    private EnderecoEntity enderecoEntity;
+    private Long enderecoId;
 
     public String getNome() {
         return nome;
@@ -53,11 +56,11 @@ public class PacienteRequestDTO {
         this.email = email;
     }
 
-    public EnderecoEntity getEnderecoEntity() {
-        return enderecoEntity;
+    public Long getEnderecoId() {
+        return enderecoId;
     }
 
-    public void setEnderecoEntity(EnderecoEntity enderecoEntity) {
-        this.enderecoEntity = enderecoEntity;
+    public void setEnderecoId(Long enderecoId) {
+        this.enderecoId = enderecoId;
     }
 }

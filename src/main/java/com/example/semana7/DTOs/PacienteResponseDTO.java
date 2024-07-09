@@ -1,6 +1,8 @@
 package com.example.semana7.DTOs;
 
 import com.example.semana7.entities.EnderecoEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.time.LocalDate;
 
@@ -8,11 +10,16 @@ public class PacienteResponseDTO {
 
     private Long pacienteId;
     private String nome;
+    @JsonSerialize
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String email;
     private EnderecoEntity enderecoEntity;
+
+    public PacienteResponseDTO() {
+    }
 
     public PacienteResponseDTO(Long pacienteId, String nome, LocalDate dataNascimento, String cpf, String telefone, String email, EnderecoEntity endereco) {
     }

@@ -11,6 +11,9 @@ public class NutricionistaResponseDTO {
     private String especialidade;
     private List<String> certificacoes;
 
+    public NutricionistaResponseDTO() {
+    }
+
     public NutricionistaResponseDTO(Long nutricionistaId, String nome, String crn, Integer tempoExperiencia, String especialidade, List<String> certificacoes) {
     }
 
