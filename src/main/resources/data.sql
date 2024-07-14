@@ -1,0 +1,8 @@
+INSERT INTO perfil (nome_perfil)
+SELECT 'ADMIN' WHERE NOT EXISTS (SELECT 1 FROM perfil WHERE nome_perfil = 'ADMIN');
+
+INSERT INTO perfil (nome_perfil)
+SELECT 'NUTRICIONISTA' WHERE NOT EXISTS (SELECT 1 FROM perfil WHERE nome_perfil = 'NUTRICIONISTA');
+
+INSERT INTO perfil (nome_perfil)
+SELECT 'PACIENTE' WHERE NOT EXISTS (SELECT 1 FROM perfil WHERE nome_perfil = 'PACIENTE');

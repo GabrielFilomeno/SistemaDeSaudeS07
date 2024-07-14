@@ -3,7 +3,9 @@ package com.example.semana7.controllers;
 import com.example.semana7.DTOs.NutricionistaRequestDTO;
 import com.example.semana7.DTOs.NutricionistaResponseDTO;
 import com.example.semana7.services.NutricionistaService;
+import com.example.semana7.services.TokenService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,11 +16,14 @@ import java.util.Optional;
 public class NutricionistaController {
 
     private final NutricionistaService nutricionistaService;
+    private final TokenService tokenService;
 
-    public NutricionistaController(NutricionistaService nutricionistaService) {
+    public NutricionistaController(NutricionistaService nutricionistaService, TokenService tokenService) {
         this.nutricionistaService = nutricionistaService;
+        this.tokenService = tokenService;
     }
 
+    @PreAuthorize("hasAnyAuthority('SCOPE_NUTRICIONISTA')")
     @PostMapping("/cadastrar")
     @ResponseStatus(HttpStatus.CREATED)
     public void cadastrarNutricionista(@RequestBody NutricionistaRequestDTO nutricionistaRequestDTO) {
@@ -28,7 +33,10 @@ public class NutricionistaController {
 
     @GetMapping("/listar")
     @ResponseStatus(HttpStatus.OK)
-    public List<NutricionistaResponseDTO> listarNutricionistas() {
+    public List<NutricionistaResponseDTO> listarNutricionistas(@RequestHeader(name = "Authorization") String token) {
+
+        tokenService.validaToken(token, "NUTRICIONISTA");
+
         return nutricionistaService.listarNutricionistas();
     }
 
